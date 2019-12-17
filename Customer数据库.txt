@@ -1,0 +1,79 @@
+create datebase spring4_day03;
+user spring4_day03;
+ create table account(
+     id int primary key auto_increment,
+     name varchar(50),
+     money double
+   
+);
+
+CREATE TABLE `cst_customer`(
+  `cust_id` bigint(32) NOT NULL AUTO_INCREMENT COMMENT '客户编号(主键)',
+  `cust_name` varchar(32) NOT NULL COMMENT '客户名称(公司名称)',
+  `cust_source` varchar(32) DEFAULT NULL COMMENT '客户信息来源',
+  `cust_industry` varchar(32) DEFAULT NULL COMMENT '客户所属行业',
+  `cust_level` varchar(32) DEFAULT NULL COMMENT '客户级别',
+  `cust_phone` varchar(64) DEFAULT NULL COMMENT '固定电话',
+  `cust_mobile` varchar(16) DEFAULT NULL COMMENT '移动电话',
+  PRIMARY KEY (`cust_id`)
+)ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE `cst_linkman`(
+  `lkm_id` bigint(32) NOT NULL AUTO_INCREMENT COMMENT '联系人编号(主键)',
+  `lkm_name` varchar(16) DEFAULT NULL COMMENT '联系人姓名',
+  `lkm_cust_id` bigint(32) NOT NULL COMMENT '客户id',
+  `lkm_gender` char(1) DEFAULT NULL COMMENT '联系人性别',
+  `lkm_phone` varchar(16) DEFAULT NULL COMMENT '联系人办公电话',
+  `lkm_mobile` varchar(16) DEFAULT NULL COMMENT '联系人手机',
+  `lkm_email` varchar(64) DEFAULT NULL COMMENT '联系人邮箱',
+  `lkm_qq` varchar(16) DEFAULT NULL COMMENT '联系人qq',
+  `lkm_position` varchar(16) DEFAULT NULL COMMENT '联系人职位',
+  `lkm_memo` varchar(512) DEFAULT NULL COMMENT '联系人备注',
+  PRIMARY KEY (`lkm_id`),
+  KEY `FK_cst_linkman_lkm_cust_id` (`lkm_cust_id`),
+  CONSTRAINT `FK_cst_linkman_lkm_cust_id` FOREIGN KEY (`lkm_cust_id`) REFERENCES `cst_customer` (`cust_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+)ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+
+create table `tb_shop_category`(
+    `shop_category_id` int(11) not null AUTO_INCREMENT,
+    `shop_category_name` varchar(100) not null DEFAULT '',
+    `shop_category_desc` varchar(1000) DEFAULT '',
+    `shop_category_img` varchar(2000) DEFAULT null,
+    `priority` int(2) not null DEFAULT '0',
+    `create_time` datetime DEFAULT null,
+    `last_edit_time` datetime DEFAULT null,
+    `parent_id` int(11) DEFAULT null,
+    PRIMARY KEY(`shop_category_id`),
+    CONSTRAINT`fk_shop_category_self` FOREIGN KEY(`parent_id`) REFERENCES `tb_shop_category`(`shop_category_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT charset=utf8;
+
+create table `tb_product_img`(
+    `product_img_id` int(20) not null AUTO_INCREMENT,
+    `img_addr` varchar(2000) not null,
+    `img_desc` varchar(2000) DEFAULT null,
+    `priority` int(2) DEFAULT '0',
+    `create_time` datetime DEFAULT null,
+    `product_id` int(20) DEFAULT null,
+    PRIMARY KEY(`product_img_id`),
+    CONSTRAINT`fk_proimg_product` FOREIGN KEY(`product_id`) REFERENCES `tb_product`(`product_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT charset=utf8;
+
+create table `tb_product`(
+    `product_id` int(100) not null AUTO_INCREMENT,
+    `product_name` varchar(100) NOT null,
+    `product_desc` varchar(2000) DEFAULT null,
+    `img_addr` varchar(2000) DEFAULT '',
+    `normal_price` varchar(100) DEFAULT null,
+    `promotion_price` varchar(100) DEFAULT null,
+    `priority` int(2) DEFAULT '0',
+    `create_time` datetime DEFAULT null,
+    `last_edit_time` datetime DEFAULT null,
+    `enable_status` int(2) NOT null DEFAULT '0',
+    `product_category_id` int(11) DEFAULT null,
+    `shop_id` int(20) NOT null DEFAULT '0',
+    PRIMARY KEY(`product_id`),
+    CONSTRAINT`fk_product_procate` FOREIGN KEY(`product_category_id`) REFERENCES `tb_product_category`(`product_category_id`),
+    CONSTRAINT`fk_product_shop`FOREIGN KEY(`shop_id`)REFERENCES`tb_shop`(`shop_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT charset=utf8;
